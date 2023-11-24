@@ -1,5 +1,5 @@
 
-
+/*
 document.addEventListener('DOMContentLoaded', async function() {
     const video = document.getElementById('video');
     try {
@@ -8,8 +8,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     } catch (error) {
         console.error('Error al acceder a la cámara:', error);
     }
-});
+});*/
 
+document.addEventListener('DOMContentLoaded', async function() {
+    const video = document.getElementById('video');
+    
+    try {
+        const constraints = { video: { facingMode: 'environment' } }; // 'environment' para cámara trasera, 'user' para cámara frontal
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = stream;
+    } catch (error) {
+        console.error('Error al acceder a la cámara:', error);
+    }
+});
 
 document.getElementById('predictButton').addEventListener('click', async function() {
     const video = document.getElementById('video');
