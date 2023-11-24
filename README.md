@@ -1,4 +1,4 @@
-# clasificacion_artesania
+# Clasificación de artesanía de bisutería
 Uso de las redes neuronales convolucionales para la clasificación de artesanía de bisutería.
 
 *Lenguajes y librerías: 
