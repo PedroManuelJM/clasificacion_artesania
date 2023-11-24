@@ -12,31 +12,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 document.addEventListener('DOMContentLoaded', async function() {
     const video = document.getElementById('video');
-    let currentFacingMode = 'user'; // 'user' para cámara frontal, 'environment' para cámara trasera
-
+    
     try {
-        const constraints = { video: { facingMode: currentFacingMode } };
+        const constraints = { video: { facingMode: 'environment' } }; // 'environment' para cámara trasera, 'user' para cámara frontal
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         video.srcObject = stream;
     } catch (error) {
         console.error('Error al acceder a la cámara:', error);
     }
-
-    document.getElementById('switchCamera').addEventListener('click', async function() {
-        try {
-            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user'; // Alternar entre cámara frontal y trasera
-            const constraints = { video: { facingMode: currentFacingMode } };
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-
-            // Detener el flujo de la cámara actual
-            const videoTracks = video.srcObject.getVideoTracks();
-            videoTracks.forEach(track => track.stop());
-
-            video.srcObject = stream; // Mostrar el nuevo flujo de cámara
-        } catch (error) {
-            console.error('Error al cambiar de cámara:', error);
-        }
-    });
 });
 
 document.getElementById('predictButton').addEventListener('click', async function() {
