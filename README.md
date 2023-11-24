@@ -1,7 +1,7 @@
 # Clasificación de artesanía de bisutería
 Uso de las redes neuronales convolucionales para la clasificación de artesanía de bisutería.
 
-*Lenguajes y librerías: 
+## Lenguajes y librerías: 
 - :ballot_box_with_check: Python para el desarrollo del modelo de red neuronal convolucional
 - :ballot_box_with_check: JavaScript -> aplicativo  
 - :ballot_box_with_check: Bootstrap -> diseño 
