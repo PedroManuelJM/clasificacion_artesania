@@ -1,5 +1,12 @@
+
+@font-face {
+    font-family: 'PassionOneRegular'; /* Nombre que asignas a tu fuente */
+    src: url('/fonts/PassionOneRegular.ttf') format('truetype'); /* Ruta relativa a la fuente */
+    /* Agrega otros formatos de fuente si tienes disponibles (woff, woff2, etc.) */
+}
+
 body {
-        background-image: url('imagen/bisuteria.png'); /* Ruta de la imagen */
+        background-image: url('/imagen/bisuteria.png'); /* Ruta de la imagen */
         background-size: cover; /* Ajusta el tamaño de la imagen para que cubra todo el fondo */
         background-position: center; /* Centra la imagen en el fondo */
         background-repeat: no-repeat; /* Evita la repetición de la imagen */
@@ -8,7 +15,6 @@ body {
         sans-serif;
         
 }
-
 
 /* Pseudo-elemento para agregar un fondo con opacidad encima de la imagen de fondo */
 body::before {
@@ -31,4 +37,9 @@ body::before {
 .content {
     position: relative; /* Asegura que el contenido mantenga su posición */
     z-index: 1; /* Coloca el contenido encima del pseudo-elemento */
+}
+
+#titulo {
+    font-family: 'PassionOneRegular';
+
 }
