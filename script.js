@@ -10,45 +10,37 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });*/
 
-document.addEventListener('DOMContentLoaded', async function() {
-    const video = document.getElementById('video');
-    const selectCamera = document.getElementById('selectCamera');
-    let videoStream;
+try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-    try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+    if (videoDevices.length > 0) {
+        // Encuentra el ID del dispositivo de la cámara trasera (si está disponible)
+        let rearCameraDeviceId = '';
+        videoDevices.forEach(device => {
+            if (device.label.toLowerCase().includes('back')) {
+                rearCameraDeviceId = device.deviceId;
+            }
+        });
 
-        if (videoDevices.length > 0) {
-            videoDevices.forEach(device => {
-                const option = document.createElement('option');
-                option.value = device.deviceId;
-                option.text = device.label || `Cámara ${selectCamera.options.length + 1}`;
-                selectCamera.appendChild(option);
-            });
-        } else {
-            console.error('No se encontraron cámaras de video disponibles.');
-        }
-    } catch (error) {
-        console.error('Error al acceder a la cámara:', error);
-    }
-
-    async function startSelectedCamera() {
-        const selectedDeviceId = selectCamera.value;
-
-        try {
-            const constraints = { video: { deviceId: { exact: selectedDeviceId } } };
+        // Si se encontró la cámara trasera, configura la transmisión con su ID
+        if (rearCameraDeviceId !== '') {
+            const constraints = {
+                video: {
+                    deviceId: { exact: rearCameraDeviceId }
+                }
+            };
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            videoStream = stream;
             video.srcObject = stream;
-        } catch (error) {
-            console.error('Error al iniciar la cámara seleccionada:', error);
+        } else {
+            console.error('No se encontró la cámara trasera.');
         }
+    } else {
+        console.error('No se encontraron cámaras de video disponibles.');
     }
-
-    document.getElementById('startCamera').addEventListener('click', startSelectedCamera);
-});
-
+} catch (error) {
+    console.error('Error al acceder a la cámara:', error);
+}
 
 document.getElementById('predictButton').addEventListener('click', async function() {
     const video = document.getElementById('video');
