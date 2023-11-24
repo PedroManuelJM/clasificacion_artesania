@@ -12,19 +12,20 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 document.addEventListener('DOMContentLoaded', async function() {
     const video = document.getElementById('video');
+    const selectCamera = document.getElementById('selectCamera');
     let videoStream;
-    let currentDeviceId;
 
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
         if (videoDevices.length > 0) {
-            currentDeviceId = videoDevices[0].deviceId;
-            const constraints = { video: { deviceId: { exact: currentDeviceId } } };
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            videoStream = stream;
-            video.srcObject = stream;
+            videoDevices.forEach(device => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.text = device.label || `Cámara ${selectCamera.options.length + 1}`;
+                selectCamera.appendChild(option);
+            });
         } else {
             console.error('No se encontraron cámaras de video disponibles.');
         }
@@ -32,34 +33,20 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Error al acceder a la cámara:', error);
     }
 
-    // Función para cambiar entre la cámara frontal y trasera
-    async function switchCamera() {
+    async function startSelectedCamera() {
+        const selectedDeviceId = selectCamera.value;
+
         try {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            const videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-            if (videoDevices.length > 1) {
-                const nextDeviceId = videoDevices.find(device => device.deviceId !== currentDeviceId).deviceId;
-
-                if (videoStream) {
-                    videoStream.getTracks().forEach(track => track.stop());
-                }
-
-                const constraints = { video: { deviceId: { exact: nextDeviceId } } };
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                videoStream = stream;
-                video.srcObject = stream;
-                currentDeviceId = nextDeviceId;
-            } else {
-                console.error('No se encontraron múltiples cámaras de video disponibles.');
-            }
+            const constraints = { video: { deviceId: { exact: selectedDeviceId } } };
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            videoStream = stream;
+            video.srcObject = stream;
         } catch (error) {
-            console.error('Error al cambiar de cámara:', error);
+            console.error('Error al iniciar la cámara seleccionada:', error);
         }
     }
 
-    // Evento de clic para el botón de cambio de cámara
-    document.getElementById('switchCamera').addEventListener('click', switchCamera);
+    document.getElementById('startCamera').addEventListener('click', startSelectedCamera);
 });
 
 
