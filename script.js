@@ -1,5 +1,5 @@
 
-/*
+
 document.addEventListener('DOMContentLoaded', async function() {
     const video = document.getElementById('video');
     try {
@@ -8,49 +8,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     } catch (error) {
         console.error('Error al acceder a la cámara:', error);
     }
-});*/
-
-
-document.addEventListener('DOMContentLoaded', async function() {
-    const video = document.getElementById('video');
-    const selectCamera = document.getElementById('selectCamera');
-
-    try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-        if (videoDevices.length > 0) {
-            videoDevices.forEach(device => {
-                const option = document.createElement('option');
-                option.value = device.deviceId;
-                option.text = device.label || `Cámara ${selectCamera.options.length + 1}`;
-                selectCamera.appendChild(option);
-            });
-        } else {
-            console.error('No se encontraron cámaras de video disponibles.');
-        }
-    } catch (error) {
-        console.error('Error al acceder a la cámara:', error);
-    }
-
-    async function startSelectedCamera() {
-        const selectedDeviceId = selectCamera.value;
-
-        try {
-            const constraints = {
-                video: {
-                    deviceId: { exact: selectedDeviceId }
-                }
-            };
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            video.srcObject = stream;
-        } catch (error) {
-            console.error('Error al iniciar la cámara seleccionada:', error);
-        }
-    }
-
-    document.getElementById('startCamera').addEventListener('click', startSelectedCamera);
 });
+
 
 document.getElementById('predictButton').addEventListener('click', async function() {
     const video = document.getElementById('video');
