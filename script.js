@@ -1,17 +1,5 @@
 
 /*
-document.getElementById('startCamera').addEventListener('click', async function() {
-    const video = document.getElementById('video');
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-    } catch (error) {
-        console.error('Error al acceder a la cámara:', error);
-    }
-});
-*/
-
-
 document.addEventListener('DOMContentLoaded', async function() {
     const video = document.getElementById('video');
     try {
@@ -20,7 +8,60 @@ document.addEventListener('DOMContentLoaded', async function() {
     } catch (error) {
         console.error('Error al acceder a la cámara:', error);
     }
+});*/
+
+document.addEventListener('DOMContentLoaded', async function() {
+    const video = document.getElementById('video');
+    let videoStream;
+    let currentDeviceId;
+
+    try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+        if (videoDevices.length > 0) {
+            currentDeviceId = videoDevices[0].deviceId;
+            const constraints = { video: { deviceId: { exact: currentDeviceId } } };
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            videoStream = stream;
+            video.srcObject = stream;
+        } else {
+            console.error('No se encontraron cámaras de video disponibles.');
+        }
+    } catch (error) {
+        console.error('Error al acceder a la cámara:', error);
+    }
+
+    // Función para cambiar entre la cámara frontal y trasera
+    async function switchCamera() {
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+            if (videoDevices.length > 1) {
+                const nextDeviceId = videoDevices.find(device => device.deviceId !== currentDeviceId).deviceId;
+
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                }
+
+                const constraints = { video: { deviceId: { exact: nextDeviceId } } };
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                videoStream = stream;
+                video.srcObject = stream;
+                currentDeviceId = nextDeviceId;
+            } else {
+                console.error('No se encontraron múltiples cámaras de video disponibles.');
+            }
+        } catch (error) {
+            console.error('Error al cambiar de cámara:', error);
+        }
+    }
+
+    // Evento de clic para el botón de cambio de cámara
+    document.getElementById('switchCamera').addEventListener('click', switchCamera);
 });
+
 
 document.getElementById('predictButton').addEventListener('click', async function() {
     const video = document.getElementById('video');
@@ -29,19 +70,7 @@ document.getElementById('predictButton').addEventListener('click', async functio
     canvas.width = 160;
     canvas.height = 160;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-/*
-    const model = await tf.loadLayersModel('model/model.json');
-    const tensor = tf.browser.fromPixels(canvas).toFloat().expandDims(0);
-    const normalizedTensor = tf.div(tensor, 255.0);
 
-    const predictions = await model.predict(normalizedTensor).data();
-    const maxPrediction = Math.max(...predictions);
-    const predictedClass = predictions.indexOf(maxPrediction);
-
-    const categoryNames = ["anillos", "aretes", "collares", "pulseras"];
-    const predictedCategory = categoryNames[predictedClass];
-
-    document.getElementById('predictedCategory').textContent = `Categoría: ${predictedCategory}`;*/
 
     // Agrega un tiempo de demora de 3 segundos (3000 milisegundos) antes de realizar la predicción
     const delayMilliseconds = 1000;
