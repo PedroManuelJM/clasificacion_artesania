@@ -16,35 +16,23 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        const rearCamera = devices.find(device => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
 
-        if (videoDevices.length > 0) {
-            // Encuentra el ID del dispositivo de la cámara trasera (si está disponible)
-            let rearCameraDeviceId = '';
-            videoDevices.forEach(device => {
-                if (device.label.toLowerCase().includes('back')) {
-                    rearCameraDeviceId = device.deviceId;
+        if (rearCamera) {
+            const constraints = {
+                video: {
+                    deviceId: { exact: rearCamera.deviceId }
                 }
-            });
-
-            // Si se encontró la cámara trasera, configura la transmisión con su ID
-            if (rearCameraDeviceId !== '') {
-                const constraints = {
-                    video: {
-                        deviceId: { exact: rearCameraDeviceId }
-                    }
-                };
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                video.srcObject = stream;
-            } else {
-                console.error('No se encontró la cámara trasera.');
-            }
+            };
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            video.srcObject = stream;
         } else {
-            console.error('No se encontraron cámaras de video disponibles.');
+            console.error('No se encontró la cámara trasera.');
         }
     } catch (error) {
         console.error('Error al acceder a la cámara:', error);
     }
+
 
 });
 
