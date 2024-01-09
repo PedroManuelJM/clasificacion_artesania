@@ -11,3 +11,5 @@ Para el desarrollo de este aplicativo , se tuvo que adaptar la arquitectura Mobi
 Una vez que el modelo de red neuronal convolucional se haya entrenado , se utiliza dicho modelo para aplicarlo en el mundo real.
 
 
+![anillo1](https://github.com/PedroManuelJM/clasificacion_artesania/assets/71619972/ec836d9b-fe47-4192-acf8-bd9f2ceae2ba)
+![anillo2](https://github.com/PedroManuelJM/clasificacion_artesania/assets/71619972/c1aff518-6e00-4bb5-bf75-816c35d6f435)
